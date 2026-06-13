@@ -1,0 +1,58 @@
+---
+- hosts: webservers
+  connection: local
+  become: true
+
+  tasks:
+
+    - name: Update package cache
+      apt:
+        update_cache: yes
+
+    - name: Install aplikasi ringan
+      apt:
+        name:
+          - git
+          - curl
+          - wget
+          - tree
+          - htop
+          - vim
+          - net-tools
+        state: present
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start nginx
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Buat folder lab
+      file:
+        path: /opt/devnet-lab
+        state: directory
+        mode: '0755'
+
+    - name: Buat file informasi
+      copy:
+        dest: /opt/devnet-lab/info.txt
+        content: |
+          Cisco DevNet Lab
+          Managed by Ansible
+          Host: DevAsc
+
+    - name: Buat user lab
+      user:
+        name: labuser
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Download file contoh
+      get_url:
+        url: https://www.google.com/robots.txt
+        dest: /opt/devnet-lab/robots.txt
