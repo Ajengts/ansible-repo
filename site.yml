@@ -16,3 +16,8 @@
         name: nginx
         state: started
         enabled: true
+
+    - name: Install tree
+      apt:
+        name: tree
+        state: present
