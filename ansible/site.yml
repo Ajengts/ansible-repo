@@ -1,5 +1,5 @@
 ---
-- name: Install Net Tools
+- name: Install tcpdump
   hosts: webservers
   become: yes
 
@@ -8,7 +8,7 @@
       apt:
         update_cache: yes
 
-    - name: Install net-tools
+    - name: Install tcpdump
       apt:
-        name: net-tools
+        name: tcpdump
         state: present
