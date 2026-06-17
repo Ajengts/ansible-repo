@@ -1,57 +1,14 @@
 ---
-- hosts: webservers
-  connection: local
-  become: true
-
-- name: Install Docker on Ubuntu
-  hosts: docker_server
+- name: Install Net Tools
+  hosts: webservers
   become: yes
 
   tasks:
-
     - name: Update apt cache
       apt:
         update_cache: yes
 
-    - name: Install required packages
+    - name: Install net-tools
       apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
+        name: net-tools
         state: present
-
-    - name: Add Docker GPG key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker Repository
-      apt_repository:
-        repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-        state: present
-
-    - name: Update apt cache again
-      apt:
-        update_cache: yes
-
-    - name: Install Docker Engine
-      apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: latest
-
-    - name: Start Docker Service
-      service:
-        name: docker
-        state: started
-        enabled: yes
-
-    - name: Add user to docker group
-      user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: yes
