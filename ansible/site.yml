@@ -1,14 +1,28 @@
 ---
-- name: Install nmap
+- name: Otomatisasi Komputer Target Teman
   hosts: webservers
   become: yes
 
   tasks:
-    - name: Update apt cache
+    - name: 1. Update cache repository apt
       apt:
         update_cache: yes
 
-    - name: Install nmap
+    - name: 2. Install nmap di komputer target
       apt:
         name: nmap
         state: present
+
+    - name: 3. Membuat 100 folder sekaligus di komputer target
+      file:
+        path: "/home/{{ ansible_user }}/target_folder/folder_{{ item }}"
+        state: directory
+        mode: '0755'
+      with_sequence: start=1 end=100 format=%04d
+
+    - name: 4. Download/Clone folder repository target secara otomatis
+      git:
+        repo: 'https://github.com/Ajengts/ansible-repo.git'
+        dest: "/home/{{ ansible_user }}/downloaded-project"
+        clone: yes
+        update: yes
